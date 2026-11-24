@@ -146,3 +146,35 @@ Boş değer (`""`) veya `ftp://x.com` gibi `http`/`https` ile başlamayan adresl
 
    {"hata":"Bu kısa bağlantı bulunamadı."}
    ```
+
+## API özeti
+
+| Yöntem | Yol | İstek gövdesi | Başarılı yanıt | Hata yanıtları |
+|---|---|---|---|---|
+| `POST` | `/api/kisalt` | `{"url": "https://..."}` | `201 Created` + `{"kisaKod", "kisaUrl", "orijinalUrl"}` | `400` geçersiz veya boş URL, bozuk JSON |
+| `GET` | `/{kod}` (6 karakter, harf/rakam) | - | `302 Found` + `Location: <orijinal URL>` | `404` kod bulunamadı |
+
+Hata yanıtları her zaman `{"hata": "<Türkçe mesaj>"}` biçimindedir.
+
+## Geliştirme süreci
+
+Her görev aynı akışla ilerledi:
+
+1. Görev panoda bir **issue** olarak açıldı (açıklama + kabul kriterleri) ve **Yapılacak** sütununa kondu.
+2. Çalışmaya başlanınca kart **Devam Ediyor** sütununa taşındı ve `main`'den görev numarasını içeren bir **branch** açıldı (ör. `feature/1-url-kisaltma`).
+3. Değişiklikler küçük commit'ler hâlinde yapıldı. Her commit mesajı görev numarasını içerir (ör. `#1`). Böylece commit'ler issue sayfasında da görünür.
+4. Branch için bir **pull request** açıldı. PR açıklamasında yapılanlar, nasıl deneneceği ve `Closes #<no>` yer aldı. GitHub Actions her PR'da testleri otomatik çalıştırdı.
+5. Testler ve elle yapılan denemeler kabul kriterlerini doğrulayınca PR `main`'e birleştirildi (merge commit ile, commit geçmişi korunarak).
+6. Issue'ya doğrulamanın nasıl yapıldığını anlatan bir yorum eklendi, kabul kriterleri işaretlendi ve kart **Tamamlandı** sütununa taşındı.
+
+Tamamlanan görevler ve pull request'ler:
+
+| Görev | Branch | Pull request |
+|---|---|---|
+| [#1 Uzun URL'yi kısaltma](https://github.com/esinakdemir70/url-kisaltici/issues/1) | `feature/1-url-kisaltma` | [#8](https://github.com/esinakdemir70/url-kisaltici/pull/8) |
+| [#2 Kısa bağlantıdan asıl adrese yönlendirme](https://github.com/esinakdemir70/url-kisaltici/issues/2) | `feature/2-yonlendirme` | [#9](https://github.com/esinakdemir70/url-kisaltici/pull/9) |
+| [#6 GitHub Actions ile otomatik derleme ve test](https://github.com/esinakdemir70/url-kisaltici/issues/6) | `feature/6-ci` | [#10](https://github.com/esinakdemir70/url-kisaltici/pull/10) |
+
+[#11](https://github.com/esinakdemir70/url-kisaltici/pull/11) numaralı PR, #6'nın "test bozulunca iş akışı kırmızı olur" kabul kriterini göstermek için bilerek bozulmuş bir testle açılmış ve birleştirilmeden kapatılmıştır.
+
+Sonraki görevler (#3 tıklanma sayısı, #4 özel kısa kod, #5 kalıcı saklama, #7 Docker) panoda **Yapılacak** sütunundadır.
