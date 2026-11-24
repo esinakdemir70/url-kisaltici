@@ -25,6 +25,12 @@ public class HataYoneticisi {
 		return Map.of("hata", mesaj);
 	}
 
+	@ExceptionHandler(BaglantiBulunamadiException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Map<String, String> baglantiBulunamadi() {
+		return Map.of("hata", "Bu kısa bağlantı bulunamadı.");
+	}
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, String> okunamayanIstek() {
