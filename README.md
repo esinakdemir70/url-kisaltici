@@ -1,3 +1,5 @@
+[![CI](https://github.com/esinakdemir70/url-kisaltici/actions/workflows/ci.yml/badge.svg)](https://github.com/esinakdemir70/url-kisaltici/actions/workflows/ci.yml)
+
 # URL Kısaltıcı
 
 ## Proje hakkında
