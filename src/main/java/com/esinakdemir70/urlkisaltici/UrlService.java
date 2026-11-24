@@ -1,6 +1,7 @@
 package com.esinakdemir70.urlkisaltici;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
@@ -30,5 +31,12 @@ public class UrlService {
 			kod = kodUretici.uret();
 		} while (linkler.putIfAbsent(kod, url) != null);
 		return kod;
+	}
+
+	/**
+	 * Kısa koda karşılık gelen orijinal URL'yi döner; kod yoksa boş Optional döner.
+	 */
+	public Optional<String> bul(String kod) {
+		return Optional.ofNullable(linkler.get(kod));
 	}
 }
