@@ -41,6 +41,6 @@ class YonlendirmeTest {
 	void olmayanKodIcin404VeTurkceHataDoner() throws Exception {
 		mockMvc.perform(get("/Yok123"))
 				.andExpect(status().isNotFound())
-				.andExpect(jsonPath("$.hata").value("Bu kısa bağlantı bulunamadı."));
+				.andExpect(jsonPath("$.hata").value("Bilerek yanlis yazilmis mesaj."));
 	}
 }
