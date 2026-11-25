@@ -25,7 +25,9 @@ public class UrlController {
 	@PostMapping("/api/kisalt")
 	public ResponseEntity<KisaltmaYaniti> kisalt(@Valid @RequestBody KisaltmaIstegi istek) {
 		String url = istek.url().trim();
-		String kod = urlService.kisalt(url);
+		String kod = (istek.ozelKod() != null)
+				? urlService.ozelKodlaKisalt(istek.ozelKod(), url)
+				: urlService.kisalt(url);
 
 		// Kısa adres, isteğin geldiği sunucu adresine göre oluşturulur (localhost sabit değil).
 		URI kisaUrl = ServletUriComponentsBuilder.fromCurrentContextPath()

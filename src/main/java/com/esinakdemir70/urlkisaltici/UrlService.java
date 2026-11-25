@@ -35,6 +35,17 @@ public class UrlService {
 	}
 
 	/**
+	 * URL'yi kullanıcının seçtiği kodla kaydeder.
+	 * Kod zaten kullanılıyorsa KodKullaniliyorException fırlatır.
+	 */
+	public String ozelKodlaKisalt(String ozelKod, String url) {
+		if (linkler.putIfAbsent(ozelKod, url) != null) {
+			throw new KodKullaniliyorException(ozelKod);
+		}
+		return ozelKod;
+	}
+
+	/**
 	 * Kısa koda karşılık gelen orijinal URL'yi döner; kod yoksa boş Optional döner.
 	 */
 	public Optional<String> bul(String kod) {
