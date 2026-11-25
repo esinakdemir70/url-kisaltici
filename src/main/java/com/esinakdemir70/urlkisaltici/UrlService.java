@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UrlService {
 
 	private final Map<String, String> linkler = new ConcurrentHashMap<>();
+	private final Map<String, Long> tiklanmalar = new ConcurrentHashMap<>();
 	private final KodUretici kodUretici;
 
 	public UrlService(KodUretici kodUretici) {
@@ -38,5 +39,20 @@ public class UrlService {
 	 */
 	public Optional<String> bul(String kod) {
 		return Optional.ofNullable(linkler.get(kod));
+	}
+
+	/**
+	 * Kısa bağlantının tıklanma sayısını bir artırır.
+	 * ConcurrentHashMap.merge atomiktir; aynı anda gelen tıklamalar kaybolmaz.
+	 */
+	public void tiklanmaArtir(String kod) {
+		tiklanmalar.merge(kod, 1L, Long::sum);
+	}
+
+	/**
+	 * Kısa bağlantının kaç kez açıldığını döner; hiç açılmadıysa 0 döner.
+	 */
+	public long tiklanmaSayisi(String kod) {
+		return tiklanmalar.getOrDefault(kod, 0L);
 	}
 }
