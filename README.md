@@ -19,6 +19,7 @@ Panoda üç sütun vardır: **Yapılacak**, **Devam Ediyor**, **Tamamlandı**. H
 - Java 17
 - Spring Boot 3.5 (Web, Validation)
 - Maven (Maven Wrapper ile)
+- HTML, CSS ve JavaScript (framework kullanılmadan, tek sayfalık arayüz)
 - JUnit 5 ve MockMvc
 - GitHub Actions (her push ve pull request'te otomatik derleme ve test)
 
@@ -56,6 +57,17 @@ Testleri çalıştırmak için:
 ```
 
 > Not: Bağlantılar bellekte tutulur. Uygulama kapatıldığında oluşturulan kısa bağlantılar silinir.
+
+## Tarayıcıdan kullanım (#15)
+
+Uygulama çalışırken tarayıcıda `http://localhost:8080` adresini açın.
+
+1. **Kısaltılacak bağlantı** kutusuna uzun adresi yapıştırın (ör. `https://github.com/esinakdemir70/url-kisaltici`).
+2. İsterseniz **Özel kod** kutusuna kendi kodunuzu yazın (ör. `devops-odev`). Boş bırakırsanız rastgele 6 karakterli bir kod üretilir.
+3. **Kısalt** butonuna basın. Kısa link yeşil kutuda görünür. Linke tıklayınca asıl site yeni sekmede açılır, **Kopyala** butonu linki panoya kopyalar.
+4. Geçersiz bir adres (ör. `merhaba`) yazıp Kısalt'a basarsanız kırmızı kutuda Türkçe hata mesajı görünür.
+
+Sayfa, aşağıda anlatılan `POST /api/kisalt` API'sini kullanır. Aynı işlemler komut satırından da yapılabilir.
 
 ## Özellik 1: URL kısaltma (#1) nasıl denenir
 
@@ -243,6 +255,7 @@ Tamamlanan görevler ve pull request'ler:
 | [#6 GitHub Actions ile otomatik derleme ve test](https://github.com/esinakdemir70/url-kisaltici/issues/6) | `feature/6-ci` | [#10](https://github.com/esinakdemir70/url-kisaltici/pull/10) |
 | [#3 Tıklanma sayısını gösterme](https://github.com/esinakdemir70/url-kisaltici/issues/3) | `feature/3-tiklanma` | [#13](https://github.com/esinakdemir70/url-kisaltici/pull/13) |
 | [#4 Özel kısa kod seçme](https://github.com/esinakdemir70/url-kisaltici/issues/4) | `feature/4-ozel-kod` | [#14](https://github.com/esinakdemir70/url-kisaltici/pull/14) |
+| [#15 Basit web arayüzü](https://github.com/esinakdemir70/url-kisaltici/issues/15) | `feature/15-arayuz` | [#16](https://github.com/esinakdemir70/url-kisaltici/pull/16) |
 
 [#11](https://github.com/esinakdemir70/url-kisaltici/pull/11) numaralı PR, #6'nın "test bozulunca iş akışı kırmızı olur" kabul kriterini göstermek için bilerek bozulmuş bir testle açılmış ve birleştirilmeden kapatılmıştır.
 
