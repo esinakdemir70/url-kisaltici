@@ -41,10 +41,11 @@ public class UrlController {
 
 	/**
 	 * Kısa bağlantıyı orijinal adrese yönlendirir (302 Found).
-	 * Desen yalnızca 6 karakterli alfanümerik kodları kabul eder; böylece
+	 * Desen 3-30 karakterlik harf, rakam ve tireden oluşan kodları kabul eder
+	 * (rastgele kodlar ve özel kodlar). Nokta ve eğik çizgi içermediği için
 	 * /api/** ve /favicon.ico gibi yollar bu metoda düşmez.
 	 */
-	@GetMapping("/{kod:[a-zA-Z0-9]{6}}")
+	@GetMapping("/{kod:[a-zA-Z0-9-]{3,30}}")
 	public ResponseEntity<Void> yonlendir(@PathVariable String kod) {
 		String url = urlService.bul(kod)
 				.orElseThrow(() -> new BaglantiBulunamadiException(kod));
