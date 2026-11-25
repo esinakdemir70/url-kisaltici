@@ -78,6 +78,7 @@
 		<div id="sonuc" class="kutu sonuc" hidden>
 			<div class="sonuc-satiri">
 				<a id="kisa-link" href="#" target="_blank" rel="noopener"></a>
+				<button id="kopyala-butonu" type="button">Kopyala</button>
 			</div>
 			<p class="orijinal">Asıl adres: <span id="orijinal-url"></span></p>
 		</div>
@@ -128,6 +129,17 @@
 				buton.disabled = false;
 				buton.textContent = "Kısalt";
 			}
+		});
+
+		const kopyalaButonu = document.getElementById("kopyala-butonu");
+		kopyalaButonu.addEventListener("click", async () => {
+			try {
+				await navigator.clipboard.writeText(kisaLink.href);
+				kopyalaButonu.textContent = "Kopyalandı";
+			} catch (hata) {
+				kopyalaButonu.textContent = "Kopyalanamadı";
+			}
+			setTimeout(() => { kopyalaButonu.textContent = "Kopyala"; }, 1500);
 		});
 
 		function hataGoster(mesaj) {
