@@ -31,6 +31,12 @@ public class HataYoneticisi {
 		return Map.of("hata", "Bu kısa bağlantı bulunamadı.");
 	}
 
+	@ExceptionHandler(KodKullaniliyorException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public Map<String, String> kodKullaniliyor() {
+		return Map.of("hata", "Bu kısa kod zaten kullanılıyor. Lütfen başka bir kod seçin.");
+	}
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, String> okunamayanIstek() {

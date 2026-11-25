@@ -87,7 +87,7 @@ Content-Type: application/json
 {"kisaKod":"v8uqf0","kisaUrl":"http://localhost:8080/v8uqf0","orijinalUrl":"https://github.com/esinakdemir70/url-kisaltici"}
 ```
 
-Kısa kod her zaman 6 karakterlidir ve yalnızca harf ve rakamlardan oluşur.
+Rastgele üretilen kısa kod her zaman 6 karakterlidir ve yalnızca harf ve rakamlardan oluşur. Kendi kodunuzu seçmek için Özellik 4'e bakın.
 
 Geçersiz URL denemesi:
 
@@ -172,12 +172,53 @@ Kısa bağlantı her açıldığında (her `302` yönlendirmesinde) tıklanma sa
 
 Olmayan bir kod için (`/api/istatistik/Yok123`) `404` ve `{"hata":"Bu kısa bağlantı bulunamadı."}` döner.
 
+## Özellik 4: Özel kısa kod (#4) nasıl denenir
+
+İstekte `ozelKod` alanı gönderilirse rastgele kod yerine bu kod kullanılır. Özel kod 3-30 karakter olmalı ve yalnızca harf, rakam ve tire (`-`) içermelidir.
+
+Linux / macOS:
+
+```bash
+curl -i -X POST http://localhost:8080/api/kisalt \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://github.com/esinakdemir70/url-kisaltici", "ozelKod": "devops-odev"}'
+```
+
+Windows PowerShell:
+
+```powershell
+curl.exe -i -X POST http://localhost:8080/api/kisalt -H "Content-Type: application/json" -d '{\"url\": \"https://github.com/esinakdemir70/url-kisaltici\", \"ozelKod\": \"devops-odev\"}'
+```
+
+Beklenen yanıt (`201 Created`):
+
+```
+HTTP/1.1 201
+Location: http://localhost:8080/devops-odev
+Content-Type: application/json
+
+{"kisaKod":"devops-odev","kisaUrl":"http://localhost:8080/devops-odev","orijinalUrl":"https://github.com/esinakdemir70/url-kisaltici"}
+```
+
+Artık `http://localhost:8080/devops-odev` adresi asıl siteye yönlendirir.
+
+Aynı komutu ikinci kez çalıştırın. Kod zaten kullanıldığı için `409 Conflict` döner:
+
+```
+HTTP/1.1 409
+Content-Type: application/json
+
+{"hata":"Bu kısa kod zaten kullanılıyor. Lütfen başka bir kod seçin."}
+```
+
+Kurala uymayan bir kod (ör. `"ozelKod": "a b"`) gönderilirse `400` ve `{"hata":"Özel kod 3-30 karakter olmalı ve yalnızca harf, rakam ve tire (-) içermelidir."}` döner.
+
 ## API özeti
 
 | Yöntem | Yol | İstek gövdesi | Başarılı yanıt | Hata yanıtları |
 |---|---|---|---|---|
-| `POST` | `/api/kisalt` | `{"url": "https://..."}` | `201 Created` + `{"kisaKod", "kisaUrl", "orijinalUrl"}` | `400` geçersiz veya boş URL, bozuk JSON |
-| `GET` | `/{kod}` (6 karakter, harf/rakam) | - | `302 Found` + `Location: <orijinal URL>` | `404` kod bulunamadı |
+| `POST` | `/api/kisalt` | `{"url": "https://...", "ozelKod": "..."}` (`ozelKod` isteğe bağlı) | `201 Created` + `{"kisaKod", "kisaUrl", "orijinalUrl"}` | `400` geçersiz URL, geçersiz özel kod veya bozuk JSON; `409` özel kod zaten kullanılıyor |
+| `GET` | `/{kod}` (3-30 karakter: harf, rakam, tire) | - | `302 Found` + `Location: <orijinal URL>` | `404` kod bulunamadı |
 | `GET` | `/api/istatistik/{kod}` | - | `200 OK` + `{"kisaKod", "orijinalUrl", "tiklanma"}` | `404` kod bulunamadı |
 
 Hata yanıtları her zaman `{"hata": "<Türkçe mesaj>"}` biçimindedir.
@@ -201,7 +242,8 @@ Tamamlanan görevler ve pull request'ler:
 | [#2 Kısa bağlantıdan asıl adrese yönlendirme](https://github.com/esinakdemir70/url-kisaltici/issues/2) | `feature/2-yonlendirme` | [#9](https://github.com/esinakdemir70/url-kisaltici/pull/9) |
 | [#6 GitHub Actions ile otomatik derleme ve test](https://github.com/esinakdemir70/url-kisaltici/issues/6) | `feature/6-ci` | [#10](https://github.com/esinakdemir70/url-kisaltici/pull/10) |
 | [#3 Tıklanma sayısını gösterme](https://github.com/esinakdemir70/url-kisaltici/issues/3) | `feature/3-tiklanma` | [#13](https://github.com/esinakdemir70/url-kisaltici/pull/13) |
+| [#4 Özel kısa kod seçme](https://github.com/esinakdemir70/url-kisaltici/issues/4) | `feature/4-ozel-kod` | [#14](https://github.com/esinakdemir70/url-kisaltici/pull/14) |
 
 [#11](https://github.com/esinakdemir70/url-kisaltici/pull/11) numaralı PR, #6'nın "test bozulunca iş akışı kırmızı olur" kabul kriterini göstermek için bilerek bozulmuş bir testle açılmış ve birleştirilmeden kapatılmıştır.
 
-Sonraki görevler (#4 özel kısa kod, #5 kalıcı saklama, #7 Docker) panoda **Yapılacak** sütunundadır.
+Sonraki görevler (#5 kalıcı saklama, #7 Docker) panoda **Yapılacak** sütunundadır.
