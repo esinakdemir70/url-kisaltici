@@ -46,6 +46,7 @@ public class UrlController {
 	public ResponseEntity<Void> yonlendir(@PathVariable String kod) {
 		String url = urlService.bul(kod)
 				.orElseThrow(() -> new BaglantiBulunamadiException(kod));
+		urlService.tiklanmaArtir(kod);
 		return ResponseEntity.status(HttpStatus.FOUND)
 				.location(URI.create(url))
 				.build();
