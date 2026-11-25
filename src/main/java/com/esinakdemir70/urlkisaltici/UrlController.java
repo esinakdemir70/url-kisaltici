@@ -46,8 +46,19 @@ public class UrlController {
 	public ResponseEntity<Void> yonlendir(@PathVariable String kod) {
 		String url = urlService.bul(kod)
 				.orElseThrow(() -> new BaglantiBulunamadiException(kod));
+		urlService.tiklanmaArtir(kod);
 		return ResponseEntity.status(HttpStatus.FOUND)
 				.location(URI.create(url))
 				.build();
+	}
+
+	/**
+	 * Kısa bağlantının kaç kez açıldığını gösterir.
+	 */
+	@GetMapping("/api/istatistik/{kod}")
+	public IstatistikYaniti istatistik(@PathVariable String kod) {
+		String url = urlService.bul(kod)
+				.orElseThrow(() -> new BaglantiBulunamadiException(kod));
+		return new IstatistikYaniti(kod, url, urlService.tiklanmaSayisi(kod));
 	}
 }

@@ -147,12 +147,38 @@ Boş değer (`""`) veya `ftp://x.com` gibi `http`/`https` ile başlamayan adresl
    {"hata":"Bu kısa bağlantı bulunamadı."}
    ```
 
+## Özellik 3: Tıklanma sayısı (#3) nasıl denenir
+
+Kısa bağlantı her açıldığında (her `302` yönlendirmesinde) tıklanma sayısı bir artar. İstatistik isteğinin kendisi sayıyı artırmaz.
+
+1. Özellik 1'deki gibi bir kısa bağlantı oluşturun ve dönen kodu not edin (ör. `V0lCSL`).
+2. Bağlantıyı tarayıcıda 3 kez açın veya komut satırından 3 kez isteyin:
+
+   ```bash
+   curl -s -o /dev/null http://localhost:8080/V0lCSL          # Windows: curl.exe -s -o NUL http://localhost:8080/V0lCSL
+   ```
+
+3. İstatistiği görüntüleyin:
+
+   ```bash
+   curl http://localhost:8080/api/istatistik/V0lCSL           # Windows: curl.exe http://localhost:8080/api/istatistik/V0lCSL
+   ```
+
+   Beklenen yanıt (`200 OK`):
+
+   ```json
+   {"kisaKod":"V0lCSL","orijinalUrl":"https://github.com/esinakdemir70/url-kisaltici","tiklanma":3}
+   ```
+
+Olmayan bir kod için (`/api/istatistik/Yok123`) `404` ve `{"hata":"Bu kısa bağlantı bulunamadı."}` döner.
+
 ## API özeti
 
 | Yöntem | Yol | İstek gövdesi | Başarılı yanıt | Hata yanıtları |
 |---|---|---|---|---|
 | `POST` | `/api/kisalt` | `{"url": "https://..."}` | `201 Created` + `{"kisaKod", "kisaUrl", "orijinalUrl"}` | `400` geçersiz veya boş URL, bozuk JSON |
 | `GET` | `/{kod}` (6 karakter, harf/rakam) | - | `302 Found` + `Location: <orijinal URL>` | `404` kod bulunamadı |
+| `GET` | `/api/istatistik/{kod}` | - | `200 OK` + `{"kisaKod", "orijinalUrl", "tiklanma"}` | `404` kod bulunamadı |
 
 Hata yanıtları her zaman `{"hata": "<Türkçe mesaj>"}` biçimindedir.
 
@@ -174,7 +200,8 @@ Tamamlanan görevler ve pull request'ler:
 | [#1 Uzun URL'yi kısaltma](https://github.com/esinakdemir70/url-kisaltici/issues/1) | `feature/1-url-kisaltma` | [#8](https://github.com/esinakdemir70/url-kisaltici/pull/8) |
 | [#2 Kısa bağlantıdan asıl adrese yönlendirme](https://github.com/esinakdemir70/url-kisaltici/issues/2) | `feature/2-yonlendirme` | [#9](https://github.com/esinakdemir70/url-kisaltici/pull/9) |
 | [#6 GitHub Actions ile otomatik derleme ve test](https://github.com/esinakdemir70/url-kisaltici/issues/6) | `feature/6-ci` | [#10](https://github.com/esinakdemir70/url-kisaltici/pull/10) |
+| [#3 Tıklanma sayısını gösterme](https://github.com/esinakdemir70/url-kisaltici/issues/3) | `feature/3-tiklanma` | [#13](https://github.com/esinakdemir70/url-kisaltici/pull/13) |
 
 [#11](https://github.com/esinakdemir70/url-kisaltici/pull/11) numaralı PR, #6'nın "test bozulunca iş akışı kırmızı olur" kabul kriterini göstermek için bilerek bozulmuş bir testle açılmış ve birleştirilmeden kapatılmıştır.
 
-Sonraki görevler (#3 tıklanma sayısı, #4 özel kısa kod, #5 kalıcı saklama, #7 Docker) panoda **Yapılacak** sütunundadır.
+Sonraki görevler (#4 özel kısa kod, #5 kalıcı saklama, #7 Docker) panoda **Yapılacak** sütunundadır.
