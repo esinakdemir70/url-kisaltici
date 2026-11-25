@@ -84,5 +84,56 @@
 
 		<div id="hata" class="kutu hata" role="alert" hidden></div>
 	</main>
+
+	<script>
+		const form = document.getElementById("url-formu");
+		const buton = document.getElementById("kisalt-butonu");
+		const sonucKutusu = document.getElementById("sonuc");
+		const kisaLink = document.getElementById("kisa-link");
+		const orijinalUrl = document.getElementById("orijinal-url");
+		const hataKutusu = document.getElementById("hata");
+
+		form.addEventListener("submit", async (olay) => {
+			olay.preventDefault(); // Sayfanın yenilenmesini engeller.
+			sonucKutusu.hidden = true;
+			hataKutusu.hidden = true;
+
+			const istek = { url: form.url.value.trim() };
+			const ozelKod = form.ozelKod.value.trim();
+			if (ozelKod !== "") {
+				istek.ozelKod = ozelKod; // Boşsa hiç gönderilmez, sunucu rastgele kod üretir.
+			}
+
+			buton.disabled = true;
+			buton.textContent = "Kısaltılıyor...";
+			try {
+				const yanit = await fetch("/api/kisalt", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(istek)
+				});
+				const veri = await yanit.json();
+
+				if (yanit.ok) {
+					kisaLink.textContent = veri.kisaUrl;
+					kisaLink.href = veri.kisaUrl;
+					orijinalUrl.textContent = veri.orijinalUrl;
+					sonucKutusu.hidden = false;
+				} else {
+					hataGoster(veri.hata || "Bir hata oluştu.");
+				}
+			} catch (hata) {
+				hataGoster("Sunucuya ulaşılamadı. Uygulamanın çalıştığından emin olun.");
+			} finally {
+				buton.disabled = false;
+				buton.textContent = "Kısalt";
+			}
+		});
+
+		function hataGoster(mesaj) {
+			hataKutusu.textContent = mesaj;
+			hataKutusu.hidden = false;
+		}
+	</script>
 </body>
 </html>
